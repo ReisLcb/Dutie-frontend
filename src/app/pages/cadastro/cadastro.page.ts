@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NonNullableFormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { IonContent, IonList, IonIcon, IonItem, IonButton, IonModal, IonInput, IonDatetime, IonDatetimeButton, IonLabel, ToastController, IonCard } from '@ionic/angular/standalone';
+import { IonContent, IonList, IonItem, IonButton, IonModal, IonInput, IonDatetime, IonDatetimeButton, IonLabel, ToastController } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { UsuarioService } from 'src/app/service/usuario.service';
 import { addIcons } from 'ionicons';
@@ -13,7 +13,7 @@ import { Usuario } from 'src/app/modelos/usuario';
   templateUrl: './cadastro.page.html',
   styleUrls: ['./cadastro.page.scss'],
   standalone: true,
-  imports: [IonCard, IonContent, CommonModule, FormsModule, IonList, IonIcon, IonItem, IonButton, ReactiveFormsModule, IonInput, IonDatetime, IonModal, IonDatetimeButton, IonLabel]
+  imports: [IonContent, CommonModule, FormsModule, IonList, IonItem, IonButton, ReactiveFormsModule, IonInput, IonDatetime, IonModal, IonDatetimeButton, IonLabel]
 })
 export class CadastroPage {
   protected id:number = -1

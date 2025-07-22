@@ -1,40 +1,33 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>listagem</ion-title>
+    <ion-title>Listagem de usuários</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-select [(ngModel)]="opcao">
+  <ion-select [(ngModel)]="opcao" label="Filtrar por:">
   <ion-select-option value="nome">Nome de usuario</ion-select-option>
   <ion-select-option value="id">Id</ion-select-option>
   </ion-select>
 
   <ion-item>
-  <ion-searchbar *ngIf="opcao == 'nome'" animated="true" placeholder="Nome de usuário" [debounce]="1000"  (ionInput)="procurarPeloNome($event)"></ion-searchbar>
-  <ion-input type="number" *ngIf="opcao == 'id'" animated="true" placeholder="Id" [debounce]="1000"  (ionInput)="procurarPeloId($event)">
+  <ion-searchbar *ngIf="opcao == 'nome'" animated="true" placeholder="Nome de usuário" [debounce]="1000" (ionInput)="procurarPeloNome($event)"></ion-searchbar>
+  <ion-input type="number" *ngIf="opcao == 'id'" animated="true" placeholder="Id" [debounce]="500"  (ionInput)="procurarPeloId($event)"></ion-input>
   </ion-item>
 
-  <ion-grid>
-    <ion-row>
-      <ion-col size="2"><b>ID</b></ion-col>
-      <ion-col size="4"><b>Nome de usuário</b></ion-col>
-      <ion-col size="4"><b>E-mail</b></ion-col>
-      <ion-col size="2"></ion-col>
-    </ion-row>
-  </ion-grid>
-
-  <ion-grid>
-    @for (usuario of usuarios; track usuario.id; let idx = $index) {
-    <ion-row>
-      <ion-col>{{ usuario.id }}</ion-col>
-      <ion-col><b>{{ usuario.nome_de_usuario }}</b></ion-col>
-      <ion-col><b>{{ usuario.email }}</b></ion-col>
-      <ion-col>
-       <ion-icon (click)="excluir(usuario.id)" name="trash-outline"></ion-icon>
-        <ion-icon (click)="alterar(idx)" name="create-outline"></ion-icon>
-      </ion-col>
-    </ion-row>
-  }
-  </ion-grid>
+  @for (usuario of usuarios; track usuario.id; let idx = $index) {
+  <ion-card>
+  <ion-card-header>
+    <ion-card-title><b>{{ usuario.nome_de_usuario }}</b></ion-card-title>
+    <ion-card-subtitle><b>ID:</b> {{ usuario.id }}</ion-card-subtitle>
+    <ion-card-subtitle><b>Nome:</b> {{ usuario.nome }}</ion-card-subtitle>
+    <ion-card-subtitle><b>Aniversário:</b> {{ usuario.data_nascimento }}</ion-card-subtitle>
+    <ion-card-subtitle><b>E-mail:</b> {{ usuario.email }}</ion-card-subtitle>
+    <ion-card-subtitle><b>Senha:</b> {{ usuario.senha }}</ion-card-subtitle>
+  </ion-card-header>
+  
+  <ion-button color="danger" (click)="excluir(usuario.id)"><ion-icon name="trash-outline"></ion-icon></ion-button>
+  <ion-button (click)="alterar(idx)"><ion-icon name="create-outline"></ion-icon></ion-button>
+</ion-card>
+}
 </ion-content>

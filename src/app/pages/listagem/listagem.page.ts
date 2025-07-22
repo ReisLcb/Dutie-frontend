@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonGrid, IonCol, IonRow, ToastController, IonSearchbar, IonIcon, IonButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonInput, ToastController, IonSearchbar, IonIcon, IonButton, IonSelect, IonSelectOption, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/angular/standalone';
 import { UsuarioService } from 'src/app/service/usuario.service';
 import { Usuario } from 'src/app/modelos/usuario';
 import { addIcons } from 'ionicons';
@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   templateUrl: './listagem.page.html',
   styleUrls: ['./listagem.page.scss'],
   standalone: true,
-  imports: [IonButton, IonGrid, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonCol, IonRow, IonSearchbar, IonIcon]
+  imports: [IonButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonSearchbar, IonIcon, IonItem, IonSelect, IonSelectOption, IonInput, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle]
 })
 
 export class ListagemPage {
@@ -54,7 +54,28 @@ export class ListagemPage {
     if(searchBar.value){
     this.UsuarioService.getByName(searchBar.value).subscribe({
       next: (users) => this.usuarios = users,
-      error: (erro) => this.exibirMensagem(erro.error)
+      error: (erro) => {
+        this.exibirMensagem(erro.error.error)
+        this.usuarios = []
+      }
+    })
+  } else this.obterTodos()
+  }
+
+  protected procurarPeloId(evento:Event){
+    const input = evento.target as HTMLIonInputElement
+
+    if(input.value && !isNaN(Number(input.value))){
+    this.UsuarioService.getById(Number(input.value)).subscribe({
+      next: (user) => {
+        this.usuarios = []
+        this.usuarios.push(user)
+      },
+
+      error: (erro) => {
+        this.exibirMensagem(erro.error.error)
+        this.usuarios = []
+      }
     })
   } else this.obterTodos()
   }

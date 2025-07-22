@@ -25,7 +25,7 @@ export class UsuarioService {
   }
 
   getById(id:number){
-    return this.http.get<Usuario[]>(`${this.api}/id/${id}`)
+    return this.http.get<Usuario>(`${this.api}/id/${id}`)
   }
 
   getByName(nome:string){
