@@ -1,0 +1,19 @@
+ion-button{
+  --color: white;
+  --background: rgba(174, 0, 255,0);
+  --border-color: blueviolet;
+  --border-radius: 50px;
+  width: 90%;
+  margin-left:20px;
+}
+
+#cadastroForm{
+    margin-top: 100%;
+}
+
+div#bola{
+    width: 100px;
+    height: 100px;
+
+    --background: white;
+}
