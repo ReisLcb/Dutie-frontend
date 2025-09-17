@@ -69,7 +69,7 @@ export class CadastroPage {
           },
 
           error: (erro) => {
-            this.exibirMensagem(erro.error.error)
+            this.exibirMensagem(erro.error)
           }
         })
   }
