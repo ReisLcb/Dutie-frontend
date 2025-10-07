@@ -1,9 +1,9 @@
   import { Component, inject, OnInit } from '@angular/core';
   import { CommonModule, NgIf } from '@angular/common';
   import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-  import { IonContent, IonHeader, IonTitle, IonToolbar, IonTab, IonTabs, IonTabBar, IonSearchbar, IonTabButton, IonIcon, ToastController, IonTextarea, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonInput, IonSelect, IonSelectOption, IonButton, IonImg, IonAlert, AlertController, IonModal, IonList, IonItem } from '@ionic/angular/standalone';
+  import { IonContent, IonHeader, IonTitle, IonToolbar, IonTab, IonTabs, IonTabBar, IonSearchbar, IonTabButton, IonIcon, ToastController, IonTextarea, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonInput, IonSelect, IonSelectOption, IonButton, IonImg, IonAlert, AlertController, IonModal, IonList, IonItem, IonFab, IonFabButton } from '@ionic/angular/standalone';
   import { addIcons } from 'ionicons';
-  import { addOutline, homeOutline, personCircle, trashOutline, createOutline, ellipsisVerticalOutline, pencilSharp, lockClosedOutline, addCircle} from 'ionicons/icons';
+  import { addOutline, homeOutline, personCircle, trashOutline, createOutline, ellipsisVerticalOutline, pencilSharp, lockClosedOutline, addCircle, playCircleSharp, play} from 'ionicons/icons';
   import { ListaTarefasService } from 'src/app/service/lista-tarefas.service';
   import { TarefaService } from 'src/app/service/tarefa.service';
   import { Lista_tarefas } from 'src/app/modelos/lista-tarefas';
@@ -19,7 +19,7 @@
     templateUrl: './main.page.html',
     styleUrls: ['./main.page.scss'],
     standalone: true,
-    imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonTab, IonTabs, IonTabBar, IonTextarea, IonTabButton, IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonInput, IonSelect, IonSelectOption, ReactiveFormsModule, IonButton, IonImg, IonAlert, IonImg, RouterLink, IonTextarea, IonSearchbar, IonModal, IonList, IonItem]
+    imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonTab, IonTabs, IonTabBar, IonTextarea, IonTabButton, IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonInput, IonSelect, IonSelectOption, ReactiveFormsModule, IonButton, IonImg, IonAlert, IonImg, RouterLink, IonTextarea, IonSearchbar, IonModal, IonList, IonItem, IonFab, IonFabButton]
   })
   export class MainPage implements OnInit {
 
@@ -33,7 +33,7 @@
     protected usuarioLogado = JSON.parse(this.loginService.obterUsuarioLogado()!.toString())
     protected listasTarefas:Lista_tarefas[] = []
     protected listasTarefasUsuario:Lista_tarefas[] = []
-    protected tarefas:Tarefa[] = []
+    protected tarefas:Tarefa[]|any[] = []
     protected usuario!:Usuario
     protected imagemSrc:string = `https://dutie-api.onrender.com${this.usuarioLogado.fotoPath}`
     
@@ -63,6 +63,33 @@
         },
       },
     ];
+
+    public alertButtonsCriarTarefa = [
+      {
+        text: 'Cancelar',
+        role: 'cancel',
+        handler: () => {
+          return
+        },
+      },
+      {
+        text: 'OK',
+        role: 'confirm',
+        handler: (res:any) => {
+          let tarefa:Partial<Tarefa> = {
+            nome: res[0]
+          }
+          this.tarefas.push(tarefa)
+          console.log(this.tarefas)
+        },
+      },
+    ];
+
+    public alertInputs = [
+          {
+            placeholder: 'Título',
+          }
+        ];
     
     setResult(event: CustomEvent<any>) {
       if(event.detail.role == 'confirm') this.excluirConta()
@@ -70,6 +97,7 @@
 
     public async  ionViewWillEnter(){
       this.idUsuario =  Number( await JSON.parse(this.loginService.obterUsuarioLogado()!.toString()).id)
+      this.usuarioLogado = this.loginService.obterUsuarioLogado()
       this.carregarDadosUsuario()
       this.obterListaTarefasPublicas()
 
@@ -80,6 +108,7 @@
 
     public async ionViewDidEnter(){
       this.idUsuario =  Number( await JSON.parse(this.loginService.obterUsuarioLogado()!.toString()).id)
+      this.usuarioLogado = this.loginService.obterUsuarioLogado()
       this.carregarDadosUsuario()
       this.obterListaTarefasPublicas()
       this.recarregarImagem()
@@ -134,7 +163,7 @@
     }
 
     constructor(private toastController:ToastController, private alertController:AlertController) { 
-      addIcons({ addOutline, homeOutline, personCircle, trashOutline, createOutline, ellipsisVerticalOutline, pencilSharp, lockClosedOutline, addCircle });
+      addIcons({ addOutline, homeOutline, personCircle, trashOutline, createOutline, ellipsisVerticalOutline, pencilSharp, lockClosedOutline, addCircle, play });
       this.obterListaTarefasPublicas()
     }
     
@@ -268,14 +297,17 @@
       return localStorage.setItem(ID_LISTA_KEY, lista_id.toString())
     }
 
-    protected async obterUsuarioPorId(){
-        this.usuarioService.getById(this.idUsuario).subscribe({
+    protected async obterUsuarioPorId(id:number){
+      let usuario!:Usuario
+      this.usuarioService.getById(id).subscribe({
         next: (resposta) => {
-            this.usuario = resposta 
+            usuario = resposta as Usuario
+            return usuario
         },
         error: () =>  {
           return null
         }
       })
+      return usuario.nome_de_usuario
     }
   }

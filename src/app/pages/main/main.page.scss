@@ -99,3 +99,19 @@ ion-modal {
 	left: 120px;
 	top: 50px;
 }
+
+ion-fab-button{
+	margin-top: 340px;
+	margin-left: 167px;
+	position: fixed;
+}
+
+ion-fab-button::part(native) {
+  background-color: #c300ff;
+  box-shadow: -5px 5px 2px 0px rgba(255, 0, 255, 0.3), 0px 1px 3px 1px rgba(225, 0, 255, 0.15);
+}
+
+ion-button#present-alert{
+	width: 100%;
+	margin-top: 30px;
+}
