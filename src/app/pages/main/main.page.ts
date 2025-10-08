@@ -79,10 +79,10 @@
           let tarefa:Partial<Tarefa> = {
             lista_tarefas_id: undefined ,
             nome: res[0],
-            prioridade: ''
+            prioridade: '',
+            status: "Pendente"
           }
           this.tarefas.push(tarefa)
-          console.log(this.tarefas)
         },
       },
     ];
@@ -102,6 +102,7 @@
       this.usuarioLogado = this.loginService.obterUsuarioLogado()
       this.carregarDadosUsuario()
       this.obterListaTarefasPublicas()
+      this.tarefas = []
 
       this.fbListaTarefas.patchValue({
         usuario_id: this.idUsuario
@@ -132,6 +133,8 @@
          descricao: '',
         visibilidade: ''
       })
+      
+      this.tarefas = []
     }
 
     async exibirMensagem(msg:string) {
@@ -239,24 +242,24 @@
       return this.listaTarefasService.getById(idLista)
     }
 
-    // protected definirListaTarefas(){
-    //   Preferences.set({
-    //     key: 'listaAtual',
-    //     value: JSON.stringify(this.fbListaTarefas.value)
-    //   })
-    // } Adicionar lista no Local storage e colocar no banco de dados depois de completa
+    protected definirListaTarefas(){
+      let TAREFA_KEY = 'tarefas'
+
+      localStorage.setItem(TAREFA_KEY, JSON.stringify(this.tarefas))
+      this.router.navigate(['/sessao-tarefas'])
+    }
 
     protected criarListaTarefas(){
       this.listaTarefasService.create(this.fbListaTarefas.value).subscribe({
         next: (resposta) => {
           let res = resposta as Lista_tarefas
+          this.guardarIdLista(res.id)
 
           for(let tarefa of this.tarefas){
             tarefa.lista_tarefas_id = res.id
           }
 
-          console.log(this.tarefas)
-          console.log(resposta)
+          this.definirListaTarefas()
           this.exibirMensagem("Lista criada com sucesso")
         },
         error: (erro) => {
@@ -337,6 +340,5 @@
     protected atribuirPrioridade(index:number, event:any){
       const prioridade = event.detail.value
       this.tarefas[index].prioridade = prioridade
-      this.exibirMensagem(`Prioridade da tarefa definida como ${prioridade}`)
     }
   }

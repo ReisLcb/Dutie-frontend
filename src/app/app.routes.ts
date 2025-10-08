@@ -39,4 +39,8 @@ export const routes: Routes = [
     path: 'alterar-foto',
     loadComponent: () => import('./pages/alterar-foto/alterar-foto.page').then( m => m.AlterarFotoPage)
   },
+  {
+    path: 'sessao-tarefas',
+    loadComponent: () => import('./pages/sessao-tarefas/sessao-tarefas.page').then( m => m.SessaoTarefasPage)
+  },
 ];
