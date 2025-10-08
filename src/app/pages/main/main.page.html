@@ -43,8 +43,8 @@
               </form>
             </ion-card-content>
           </ion-card>
-          <b style="margin-left: 122px; position: absolute;">Conjunto de tarefas</b>
-          <ion-button fill="outline" style="color: #a970ff;" id="present-alert">Adicionar tarefa</ion-button>
+          <b style="margin-left: 33%; position: absolute;">Conjunto de tarefas</b>
+          <ion-button fill="outline" style="color: #a970ff; width: 98%;" id="present-alert">Adicionar tarefa</ion-button>
           <ion-alert
             trigger="present-alert"
             header="Informações da tarefa"
@@ -53,7 +53,14 @@
           ></ion-alert>
           @for(tarefa of tarefas; track $index){
             <ion-item>
-              {{ "Tarefa" }}
+              {{ tarefa.nome }}
+              <ion-button fill="clear" color="danger" slot="end" (click)="removerTarefa($index)"><ion-icon name="trash-outline"></ion-icon></ion-button>
+              <ion-select placeholder="Prioridade" label="" style="float: right;" (ionChange)="atribuirPrioridade($index, $event)" >
+                <ion-select-option value="maxima">Máxima</ion-select-option>
+                <ion-select-option value="alta">Alta</ion-select-option>
+                <ion-select-option value="media">Média</ion-select-option>
+                <ion-select-option value="baixa">Baixa</ion-select-option>
+              </ion-select>
             </ion-item>
           }
           <ion-fab>

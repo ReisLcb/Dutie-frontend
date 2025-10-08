@@ -33,7 +33,7 @@
     protected usuarioLogado = JSON.parse(this.loginService.obterUsuarioLogado()!.toString())
     protected listasTarefas:Lista_tarefas[] = []
     protected listasTarefasUsuario:Lista_tarefas[] = []
-    protected tarefas:Tarefa[]|any[] = []
+    protected tarefas:Partial<Tarefa>[]|any[] = []
     protected usuario!:Usuario
     protected imagemSrc:string = `https://dutie-api.onrender.com${this.usuarioLogado.fotoPath}`
     
@@ -77,7 +77,9 @@
         role: 'confirm',
         handler: (res:any) => {
           let tarefa:Partial<Tarefa> = {
-            nome: res[0]
+            lista_tarefas_id: undefined ,
+            nome: res[0],
+            prioridade: ''
           }
           this.tarefas.push(tarefa)
           console.log(this.tarefas)
@@ -246,7 +248,17 @@
 
     protected criarListaTarefas(){
       this.listaTarefasService.create(this.fbListaTarefas.value).subscribe({
-        next: () => this.exibirMensagem("Lista criada com sucesso"),
+        next: (resposta) => {
+          let res = resposta as Lista_tarefas
+
+          for(let tarefa of this.tarefas){
+            tarefa.lista_tarefas_id = res.id
+          }
+
+          console.log(this.tarefas)
+          console.log(resposta)
+          this.exibirMensagem("Lista criada com sucesso")
+        },
         error: (erro) => {
           this.exibirMensagem(erro.error)
           console.log(erro)
@@ -297,6 +309,12 @@
       return localStorage.setItem(ID_LISTA_KEY, lista_id.toString())
     }
 
+    protected obterIdLista(){
+      let ID_LISTA_KEY = 'id-lista-key'
+      
+      return localStorage.getItem(ID_LISTA_KEY)
+    }
+
     protected async obterUsuarioPorId(id:number){
       let usuario!:Usuario
       this.usuarioService.getById(id).subscribe({
@@ -309,5 +327,16 @@
         }
       })
       return usuario.nome_de_usuario
+    }
+
+    protected removerTarefa(index:number){
+      this.tarefas.splice(index, 1)
+      this.exibirMensagem("Tarefa removida com sucesso")
+    }
+
+    protected atribuirPrioridade(index:number, event:any){
+      const prioridade = event.detail.value
+      this.tarefas[index].prioridade = prioridade
+      this.exibirMensagem(`Prioridade da tarefa definida como ${prioridade}`)
     }
   }
